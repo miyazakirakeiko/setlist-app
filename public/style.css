@@ -1,0 +1,22 @@
+/* SortableJS用スタイル */
+.sortable-ghost {
+    opacity: 0.4;
+    background-color: #c8ebfb; /* ドラッグ中の空きスペースの背景色 */
+  }
+  
+  .sortable-chosen, .sortable-drag {
+    opacity: 1 !important; /* ドラッグ中の要素が半透明にならないように */
+    cursor: grabbing !important; /* 掴んでいるカーソル */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* ドラッグ中に影をつける */
+  }
+  
+  /* 元のCSS (カーソル設定はli要素に直接適用) */
+  ul#setlist li {
+    cursor: grab; /* 通常時の掴むカーソル */
+  }
+  
+  /* --- 以下に元々 styles.css に記述していた内容があれば続ける --- */
+  body {
+    font-family: "Noto Sans JP", "Noto Sans", sans-serif;
+  }
+  /* ...その他のスタイル... */
