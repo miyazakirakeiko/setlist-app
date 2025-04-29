@@ -42,12 +42,31 @@
 https://miyazakirakeiko.github.io/portfolio-setlist/
 
 # 使用技術
+フロントエンド (Frontend)
 - HTML
 - CSS
-  - Tailwind CSS
+- Tailwind CSS 
 - JavaScript
-  - Sortable.js
-  - html2pdf.js
+- Vite - 
+- Sortable.js - (ドラッグ＆ドロップライブラリ)
+- html2pdf.js - (HTMLからPDF生成ライブラリ)
+- Node.js / npm 
+
+バックエンド (Backend)
+- PHP
+- Laravel - 
+- Composer -
+  
+- データベース (Database)
+PostgreSQL
+
+インフラ・開発環境 (Infrastructure & Development)
+- Docker 
+- Git / GitHub 
+  
+デプロイ (Deployment)
+- Fly.io - (アプリケーションホスティングプラットフォーム)
+
 
 # 機能一覧
 <br >
