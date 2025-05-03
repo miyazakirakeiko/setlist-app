@@ -2,28 +2,34 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\SongController; // これを忘れずに！
+use App\Http\Controllers\Api\SongController; // 正しいパスか確認
 
 /*
 |--------------------------------------------------------------------------
 | API Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
 */
 
-// デフォルトで存在する Sanctum 用のルート (なければこれも追加)
+// デフォルトの Sanctum ユーザー情報取得ルート
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// 曲リスト取得 (GET /api/songs)
-Route::get('/songs', [SongController::class, 'index']);
 
-// 曲登録 (POST /api/songs)
-Route::post('/songs', [SongController::class, 'store']);
+// ↓↓↓ 認証が必要なAPIルートグループ ↓↓↓
+Route::middleware('web')->group(function () { // 'auth:sanctum' または 'auth' (セッション認証なら)
 
-// Route::delete('/songs/{song}', [SongController::class, 'destroy'])->name('api.songs.destroy'); // destroyメソッドを呼び出す
+    // 曲リスト取得 (GET /api/songs) - 認証ユーザーの曲を返す
+    Route::get('/songs', [SongController::class, 'index'])->name('api.songs.index'); // ルート名追加 (任意)
+
+    // 曲登録 (POST /api/songs) - 認証ユーザーの曲として登録/取得
+    Route::post('/songs', [SongController::class, 'store'])->name('api.songs.store'); // ルート名追加 (任意)
+
+    // 必要であれば削除APIもここに追加
+    // Route::delete('/songs/{song}', [SongController::class, 'destroy'])->name('api.songs.destroy');
+
+}); // ← middleware グループの終わり
+
+
+// ★★★ もし認証なしで全曲リストを返すAPIも必要なら、グループの外に残す ★★★
+// Route::get('/all-songs', [SongController::class, 'getAllSongs']); // 例：別のエンドポイントを用意するなど

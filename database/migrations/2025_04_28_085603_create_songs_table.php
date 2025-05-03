@@ -6,36 +6,27 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up(): void
     {
-        // 'songs' という名前のテーブルを作成する定義
         Schema::create('songs', function (Blueprint $table) {
-            // idカラム: 主キー、自動増分する整数型
             $table->id();
 
-            // titleカラム: 文字列型(VARCHAR)、ユニーク制約付き (同じ曲名は登録できない)
-            $table->string('title')->unique();
+            // ★★★ user_id カラムを追加 ★★★
+            // usersテーブルのidを参照する外部キーとして設定し、
+            // ユーザーが削除されたら関連する曲も削除する (cascade)
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
 
-            // timestampsカラム: created_atとupdated_atカラム (日付時刻型)
-            // Laravelがレコード作成日時と更新日時を自動で記録します
+            // ★★★ title カラムの unique() を削除 ★★★
+            // title はユーザーごとには重複しても良い場合が多い
+            // (システム全体でユニークにしたい場合は残す)
+            $table->string('title'); // unique() を削除
+
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     * (マイグレーションを取り消す際の処理)
-     *
-     * @return void
-     */
     public function down(): void
     {
-        // 'songs' テーブルが存在すれば削除する
         Schema::dropIfExists('songs');
     }
 };

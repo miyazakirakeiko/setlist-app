@@ -6,6 +6,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany; // HasManyを追加済み
+use App\Models\Song; // Songモデルをuse済み
 
 class User extends Authenticatable
 {
@@ -45,4 +47,16 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // ↓↓↓ ここに songs() メソッドを追加 ↓↓↓
+    /**
+     * ユーザーが所有する曲を取得
+     * (Get the songs for the user.)
+     */
+    public function songs(): HasMany
+    {
+        // リレーションを定義: User はたくさんの Song を持つ (hasMany)
+        return $this->hasMany(Song::class); // Songモデルを指定
+    }
+    // ↑↑↑ ここに songs() メソッドを追加 ↑↑↑
 }

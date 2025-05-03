@@ -1,26 +1,41 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SongListController; // これを use
+// ★ SetlistController を use する (まだなければ作成してください)
+use App\Http\Controllers\SetlistController;
+use App\Http\Controllers\SongListController; // 既存の曲管理コントローラー
+use App\Http\Controllers\ProfileController;
 
-// セットリスト作成ページ
-Route::get('/', function () {
-    return view('setlist');
-});
+// --- 認証が必要なルート ---
+Route::middleware('auth')->group(function () {
 
-// --- 曲管理 CRUD 用ルート ---
+    // ↓↓↓ ルート '/' を SetlistController@create に変更 ↓↓↓
+    // セットリスト作成画面 (DBから曲リストを取得してビューに渡す)
+    Route::get('/', [SetlistController::class, 'create'])->name('home'); // ← 変更
 
-// R: Read (一覧表示)
-Route::get('/manage-songs', [SongListController::class, 'index'])->name('songs.manage');
+    // 楽曲管理のルート群 (既存)
+    Route::get('/manage-songs', [SongListController::class, 'index'])->name('songs.manage'); // 'songs.index' の方が一般的かも
+    Route::post('/manage-songs', [SongListController::class, 'store'])->name('songs.store'); // 管理画面からの追加用
+    Route::get('/manage-songs/{song}/edit', [SongListController::class, 'edit'])->name('songs.edit');
+    Route::put('/manage-songs/{song}', [SongListController::class, 'update'])->name('songs.update');
+    Route::delete('/manage-songs/{song}', [SongListController::class, 'destroy'])->name('songs.destroy');
 
-// C: Create (新規登録処理)
-Route::post('/manage-songs', [SongListController::class, 'store'])->name('songs.store');
+    // ↓↓↓ Ajax通信用のルートを追加 ↓↓↓
+    // 曲名を送信し、DBで検索または作成して結果を返すエンドポイント
+    Route::post('/songs/find-or-create', [SongListController::class, 'findOrCreate'])->name('songs.findOrCreate'); // ← 追加
 
-// R: Read (編集画面表示)
-Route::get('/manage-songs/{song}/edit', [SongListController::class, 'edit'])->name('songs.edit');
+    // Breezeが生成したダッシュボードルート (不要ならコメントアウト or 削除)
+    // Route::get('/dashboard', function () {
+    //     return view('dashboard');
+    // })->name('dashboard');
 
-// U: Update (更新処理)
-Route::put('/manage-songs/{song}', [SongListController::class, 'update'])->name('songs.update'); // PUTメソッド使用
+    // プロファイル関連ルート (既存)
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-// D: Delete (削除処理)
-Route::delete('/manage-songs/{song}', [SongListController::class, 'destroy'])->name('songs.destroy');
+
+}); // ← middleware('auth')->group() の終わり
+
+// Breezeの認証関連ルートの読み込み
+require __DIR__.'/auth.php';
