@@ -32,7 +32,8 @@
                 <input type="text" name="title" placeholder="曲名を入力" required maxlength="255"
                        class="flex-grow w-full sm:w-auto p-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 @error('title') border-red-500 @else border-gray-300 @enderror"
                        value="{{ old('title') }}"> {{-- バリデーションエラー時に値を保持 --}}
-                <button type="submit" class="w-full sm:w-auto px-4 py-2 bg-indigo-600 text-white font-semibold rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 whitespace-nowrap">
+                {{-- ★★★ 追加ボタンのクラスを変更 ★★★ --}}
+                <button type="submit" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 whitespace-nowrap">
                     追加
                 </button>
             </div>
@@ -53,18 +54,25 @@
                             <span class="text-gray-800 break-words mr-4">{{ $song->title }}</span>
                             {{-- 操作ボタンエリア --}}
                             <div class="flex-shrink-0 flex items-center space-x-2">
-                                {{-- 編集ボタン (リンク) --}}
+                                {{-- ★★★ 編集ボタン (リンク) のクラスを変更 ★★★ --}}
                                 <a href="{{ route('songs.edit', $song) }}" {{-- 編集ページへのリンク --}}
-                                   class="px-3 py-1 bg-blue-500 text-white text-xs font-semibold rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 whitespace-nowrap">
+                                   class="inline-flex items-center px-3 py-1 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 whitespace-nowrap">
                                     編集
                                 </a>
-                                {{-- 削除ボタン (フォーム) --}}
+                                {{-- ★★★ 削除ボタン (フォーム) のクラスを変更 ★★★ --}}
                                 <form action="{{ route('songs.destroy', $song) }}" method="POST" onsubmit="return confirm('「{{ e($song->title) }}」を本当に削除しますか？');" class="inline"> {{-- formをinlineに --}}
                                     @csrf {{-- CSRF --}}
                                     @method('DELETE') {{-- DELETEメソッド指定 --}}
-                                    <button type="submit" class="px-3 py-1 bg-red-500 text-white text-xs font-semibold rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1 whitespace-nowrap">
+                                     {{-- 色もグレーに統一する場合 --}}
+                                    <button type="submit" class="inline-flex items-center px-3 py-1 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 whitespace-nowrap">
                                         削除
                                     </button>
+                                     {{-- もし赤色を残したい場合はこちらを使う --}}
+                                     {{--
+                                     <button type="submit" class="inline-flex items-center px-3 py-1 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150 whitespace-nowrap">
+                                         削除
+                                     </button>
+                                     --}}
                                 </form>
                             </div>
                         </li>
@@ -81,9 +89,16 @@
 
         {{-- セットリスト作成ページに戻るリンク --}}
         <div class="mt-8 pt-4 border-t border-gray-200">
-            <a href="{{ url('/') }}" class="text-blue-600 hover:text-blue-800 hover:underline">
+             {{-- ★★★ 戻るリンクをボタン風に変更 ★★★ --}}
+            <a href="{{ url('/') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                 « セットリスト作成に戻る
             </a>
+             {{-- リンクのままが良い場合はこちらを使う --}}
+             {{--
+             <a href="{{ url('/') }}" class="text-blue-600 hover:text-blue-800 hover:underline">
+                 « セットリスト作成に戻る
+             </a>
+             --}}
         </div>
     </div>
     {{-- JavaScriptファイルは不要になったので削除 or コメントアウト --}}

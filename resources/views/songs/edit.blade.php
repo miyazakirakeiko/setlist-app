@@ -28,12 +28,19 @@
             </div>
 
             <div class="flex items-center justify-end space-x-3 mt-6">
-                {{-- キャンセルボタン（一覧へ戻る） --}}
-                <a href="{{ route('songs.manage') }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                {{-- ★★★ キャンセルボタンのクラスを変更 ★★★ --}}
+                <a href="{{ route('songs.manage') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                     キャンセル
                 </a>
-                {{-- 更新ボタン --}}
-                <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                 {{-- 参考: もしセカンダリボタン風 (白背景・グレー文字・枠線) にしたい場合はこちらを使う --}}
+                 {{--
+                 <a href="{{ route('songs.manage') }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">
+                     キャンセル
+                 </a>
+                 --}}
+
+                {{-- ★★★ 更新ボタンのクラスを変更 ★★★ --}}
+                <button type="submit" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                     更新する
                 </button>
             </div>
