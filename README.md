@@ -67,6 +67,9 @@ PostgreSQL
 デプロイ (Deployment)
 - Fly.io - (アプリケーションホスティングプラットフォーム)
 
+# ER図
+<img width="686" alt="スクリーンショット 2025-05-06 17 46 48" src="https://github.com/user-attachments/assets/785d300c-c6e8-4adf-84fa-7ab3bd7a7592" />
+
 
 # 機能一覧
 <br >
