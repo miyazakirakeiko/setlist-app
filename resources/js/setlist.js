@@ -1,5 +1,3 @@
-// resources/js/setlist.js
-
 console.log('--- setlist.js (Vite) ロード開始 ---');
 
 // --- グローバル変数 ---
@@ -7,7 +5,7 @@ let currentSetlistItems = []; // セットリスト項目
 let invertColors = false;     // 白黒反転の状態フラグ
 const csrfToken = window.csrfToken || document.querySelector('meta[name="csrf-token"]')?.getAttribute('content'); // CSRFトークン
 const findOrCreateSongUrl = window.findOrCreateSongUrl || '/songs/find-or-create'; // Ajax URL
-const SESSION_STORAGE_KEY = 'draftSetlist'; // Session Storage 用のキー
+const SESSION_STORAGE_KEY = 'draftSetlistData'; // Session Storage 用のキー (より明確な名前に変更も検討)
 
 // --- DOM要素参照 (DOMContentLoaded内で取得) ---
 let songInput, setlistDisplay, dataList, addButton, mcButton;
@@ -30,10 +28,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Session Storage からデータを読み込み ---
-    loadSetlistFromSession();
+    loadSetlistFromSession(); // ★ メタデータも読み込むように変更
 
     // --- イベントリスナーを設定 ---
-    setupEventListeners();
+    setupEventListeners(); // ★ メタデータ入力フィールドのイベントリスナーも追加
 
     // --- SortableJSを初期化 ---
     initializeSortable();
@@ -73,22 +71,51 @@ function validateRequiredElements() {
         console.error('必須のHTML要素 (song-input, setlist, song-suggestions, add-song-button, add-mc-button) が見つかりません。IDを確認してください。');
         return false;
     }
+    // メタデータ入力フィールドも必須とするならここに追加
+    if (!bandNameInput || !eventNameInput || !dateInput || !venueNameInput) {
+        console.warn('メタデータ入力要素 (band-name, event-name, date-input, venue-name) の一部が見つかりません。');
+        // return false; // 必須ならfalseを返す
+    }
     return true;
 }
 
 /**
- * Session Storage からセットリストデータを読み込む
+ * Session Storage からセットリストデータとメタデータを読み込む
  */
 function loadSetlistFromSession() {
-    const savedData = sessionStorage.getItem(SESSION_STORAGE_KEY);
-    if (savedData) {
+    const savedJson = sessionStorage.getItem(SESSION_STORAGE_KEY);
+    if (savedJson) {
         try {
-            currentSetlistItems = JSON.parse(savedData);
-            console.log('SessionStorage からセットリストを復元しました:', currentSetlistItems);
+            const savedData = JSON.parse(savedJson);
+
+            // 新しい形式 (オブジェクトで items と metadata を含む)
+            if (typeof savedData === 'object' && savedData !== null && 'items' in savedData && 'metadata' in savedData) {
+                currentSetlistItems = Array.isArray(savedData.items) ? savedData.items : [];
+
+                if (savedData.metadata) {
+                    if (bandNameInput && typeof savedData.metadata.bandName === 'string') bandNameInput.value = savedData.metadata.bandName;
+                    if (eventNameInput && typeof savedData.metadata.eventName === 'string') eventNameInput.value = savedData.metadata.eventName;
+                    if (dateInput && typeof savedData.metadata.date === 'string') dateInput.value = savedData.metadata.date;
+                    if (venueNameInput && typeof savedData.metadata.venueName === 'string') venueNameInput.value = savedData.metadata.venueName;
+                }
+                console.log('SessionStorage からセットリストとメタデータを復元しました:', savedData);
+            }
+            // 古い形式 (currentSetlistItems の配列のみ)
+            else if (Array.isArray(savedData)) {
+                currentSetlistItems = savedData;
+                console.log('SessionStorage からセットリスト (古い形式) を復元しました:', currentSetlistItems);
+                // この場合、メタデータは空になる
+            }
+            // それ以外の予期せぬ形式
+            else {
+                console.warn('SessionStorage のデータ形式が不正です。リセットします。', savedData);
+                currentSetlistItems = [];
+                // メタデータもクリア (入力フィールドが初期化されていればそのままでもよい)
+            }
         } catch (e) {
             console.error('SessionStorage からのデータ復元に失敗しました:', e);
-            currentSetlistItems = []; // エラー時は空にする
-            sessionStorage.removeItem(SESSION_STORAGE_KEY); // 不正なデータを削除
+            currentSetlistItems = [];
+            sessionStorage.removeItem(SESSION_STORAGE_KEY);
         }
     } else {
         currentSetlistItems = []; // 保存されたデータがなければ空で初期化
@@ -99,9 +126,20 @@ function loadSetlistFromSession() {
  * 各ボタンや入力欄にイベントリスナーを設定する
  */
 function setupEventListeners() {
-    // 日付入力欄
+    // メタデータ入力フィールドのイベントリスナー
+    const metadataInputs = [bandNameInput, eventNameInput, venueNameInput];
+    metadataInputs.forEach(input => {
+        if (input) {
+            input.addEventListener('input', saveSetlistToSession);
+        }
+    });
+
+    // 日付入力欄 (changeイベントの方が適切)
     if (dateInput) {
-        dateInput.addEventListener("change", () => dateInput.blur());
+        dateInput.addEventListener("change", () => {
+            dateInput.blur(); // フォーカスを外す
+            saveSetlistToSession();
+        });
     }
 
     // 曲を追加ボタン
@@ -145,18 +183,16 @@ function initializeSortable() {
 
     new Sortable(setlistDisplay, {
         animation: 150,
-        ghostClass: 'bg-blue-100', // ドラッグ中のスタイル例
+        ghostClass: 'bg-blue-100',
         chosenClass: 'sortable-chosen',
         dragClass: 'sortable-drag',
         onEnd: function (evt) {
-            // 配列の要素を移動
             if (evt.oldIndex !== undefined && evt.newIndex !== undefined && evt.oldIndex !== evt.newIndex) {
                  const movedItem = currentSetlistItems.splice(evt.oldIndex, 1)[0];
                  currentSetlistItems.splice(evt.newIndex, 0, movedItem);
-                 renderSetlist(); // UIを更新して番号を振り直す
+                 renderSetlist();
                  console.log(`項目を ${evt.oldIndex} から ${evt.newIndex} に移動しました。`);
-                 // Session Storage に保存
-                 saveSetlistToSession();
+                 saveSetlistToSession(); // ★ 並び替え後も保存
             }
         },
     });
@@ -171,7 +207,7 @@ function initializeSortable() {
  * 「曲を追加」ボタンが押されたときの処理
  */
 async function addSong() {
-    if (!songInput) return; // songInput が初期化されているか確認
+    if (!songInput) return;
 
     const songTitle = songInput.value.trim();
     if (songTitle === "") {
@@ -179,7 +215,6 @@ async function addSong() {
         return;
     }
 
-    // セットリスト内に既に同じ曲名があるかチェック
     const alreadyInSetlist = currentSetlistItems.some(item =>
         item.type === 'song' && item.title.toLowerCase() === songTitle.toLowerCase()
     );
@@ -189,7 +224,6 @@ async function addSong() {
         return;
     }
 
-    // ボタンを無効化
     if (addButton) {
         addButton.disabled = true;
         addButton.textContent = '処理中...';
@@ -198,7 +232,6 @@ async function addSong() {
     console.log(`曲名 "${songTitle}"。DBへの登録/確認を試みます... URL: ${findOrCreateSongUrl}`);
 
     try {
-        // サーバーに曲の検索または作成をリクエスト
         const response = await fetch(findOrCreateSongUrl, {
             method: 'POST',
             headers: {
@@ -211,13 +244,11 @@ async function addSong() {
 
         const result = await response.json();
 
-        // レスポンスチェック
         if (!response.ok) {
             console.error(`POST ${response.url} ${response.status} (${response.statusText})`);
             throw new Error(result.message || `サーバーエラー (${response.status})`);
         }
 
-        // 成功時の処理
         if (result.success && result.song) {
             console.log('DBへの登録/取得 完了:', result.song);
             currentSetlistItems.push({
@@ -225,23 +256,20 @@ async function addSong() {
                 id: result.song.id,
                 title: result.song.title
             });
-            renderSetlist();                 // UI更新
-            songInput.value = '';            // 入力欄クリア
-            updateDatalistOption(result.song.title); // Datalist更新
+            renderSetlist();
+            songInput.value = '';
+            updateDatalistOption(result.song.title);
             console.log(`"${result.song.title}" をセットリストに追加しました。`);
-            saveSetlistToSession();          // Session Storageに保存
+            saveSetlistToSession(); // ★ 曲追加後も保存
         } else {
-             // 成功レスポンスだが期待した形式でない場合
              console.warn('サーバーからの予期しないレスポンス:', result);
              throw new Error(result.message || '曲の処理に失敗しました。');
         }
 
     } catch (error) {
-        // エラー処理
         console.error('曲のDB登録/確認中にエラーが発生しました:', error);
         alert(`曲の処理中にエラーが発生しました。\n${error.message}\nセットリストへの追加を中止します。`);
     } finally {
-        // ボタンを有効化
         if (addButton) {
             addButton.disabled = false;
             addButton.textContent = '曲を追加';
@@ -253,16 +281,15 @@ async function addSong() {
  * MCをセットリストに追加する
  */
 function addMC() {
-    // 上限チェック (例: 20項目)
     if (currentSetlistItems.length >= 20) {
         alert("セットリストに追加できる項目数の上限に達しました。");
         return;
     }
 
     currentSetlistItems.push({ type: "mc", title: "MC" });
-    renderSetlist();         // UI更新
+    renderSetlist();
     console.log('"MC" をセットリストに追加しました。');
-    saveSetlistToSession();  // Session Storageに保存
+    saveSetlistToSession(); // ★ MC追加後も保存
 }
 
 /**
@@ -272,16 +299,18 @@ function addMC() {
 function deleteItem(index) {
     if (index >= 0 && index < currentSetlistItems.length) {
         const itemTitle = currentSetlistItems[index].title;
-        currentSetlistItems.splice(index, 1); // 配列から削除
-        renderSetlist();                      // UI更新
+        currentSetlistItems.splice(index, 1);
+        renderSetlist();
         console.log(`項目 "${itemTitle}" (インデックス ${index}) を削除しました。`);
-        saveSetlistToSession();               // Session Storageに保存
+        saveSetlistToSession(); // ★ 項目削除後も保存
     }
 }
 
 // ==================================================================
 // --- UI更新 / 表示系関数 ---
 // ==================================================================
+
+// renderSetlist, updateDatalistOption は変更なし
 
 /**
  * 現在の`currentSetlistItems`配列の内容をもとに、
@@ -325,9 +354,7 @@ function renderSetlist() {
         // 削除ボタン
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "削除";
-        // ↓↓↓ ★★★ 削除ボタンのクラスから opacity-0 と group-hover:opacity-100 を削除 ★★★ ↓↓↓
-        deleteButton.className = `flex-shrink-0 px-2 py-1 text-xs text-red-600 hover:text-red-800 ${invertColors ? 'hover:bg-gray-600' : 'hover:bg-red-100'} rounded focus:outline-none focus:ring-1 focus:ring-red-500 transition-opacity`; // 常に表示されるように
-        // ↑↑↑ ★★★ ここまで修正 ★★★ ↑↑↑
+        deleteButton.className = `flex-shrink-0 px-2 py-1 text-xs text-red-600 hover:text-red-800 ${invertColors ? 'hover:bg-gray-600' : 'hover:bg-red-100'} rounded focus:outline-none focus:ring-1 focus:ring-red-500 transition-opacity`;
         deleteButton.addEventListener('click', (event) => {
              event.stopPropagation(); // ドラッグ操作と区別
              deleteItem(index);       // 削除関数呼び出し
@@ -361,9 +388,14 @@ function renderSetlist() {
     }
 }
 
+
 // ==================================================================
 // --- プレビュー・PDF・反転機能 (既存の関数を流用) ---
 // ==================================================================
+// getFontSizeForPDF, showPreview, generatePDF, toggleInvert は変更なし
+// ただし、showPreview, generatePDF 内で bandNameInput などから値を取得しているので、
+// loadSetlistFromSession で値が正しく復元されていれば、これらの関数はそのまま動作します。
+
 
 /**
  * PDF用のフォントサイズを決定する
@@ -388,29 +420,25 @@ function showPreview() {
         return;
     }
 
-    // 入力値を取得 (null チェックを追加)
     const bandName = bandNameInput?.value.trim() || "バンド名未入力";
     const eventName = eventNameInput?.value.trim() || "イベント名未入力";
     const inputDate = dateInput?.value.trim() || "日付未入力";
     const venueName = venueNameInput?.value.trim() || "会場名未入力";
 
-    // バンド名のフォントサイズ調整
     let bandNameFontSize = "24px";
     if (bandName.length >= 16) bandNameFontSize = "17.5px";
     else if (bandName.length >= 11) bandNameFontSize = "20px";
 
-    // セットリスト項目をHTMLリストに変換
     let songNumber = 1;
     const listItemsHtml = currentSetlistItems.map(item => {
         const style = `font-size: 15px; text-align: left; white-space: normal; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; color: ${invertColors ? "yellow" : "black"};`;
         if (item.type === "song") {
             return `<li style="${style}">${songNumber++}. ${item.title}</li>`;
         } else {
-            return `<li style="${style}">${item.title}</li>`; // MC
+            return `<li style="${style}">${item.title}</li>`;
         }
     }).join("");
 
-    // プレビュー全体のHTMLを生成
     const previewContentHtml = `
         <div style="width: 105mm; height: 149mm; padding: 15px; box-sizing: border-box; background-color: ${invertColors ? 'black' : 'white'}; color: ${invertColors ? 'yellow' : 'black'}; border: 1px solid #ccc; display: flex; flex-direction: column; justify-content: flex-start; align-items: center;">
             <h3 style="font-size: ${bandNameFontSize}; text-align: center; margin: 0 0 5px 0; font-weight: bold;">${bandName}</h3>
@@ -422,7 +450,6 @@ function showPreview() {
             </ul>
         </div>`;
 
-    // プレビュー内容を更新し、エリアを表示
     previewContent.innerHTML = previewContentHtml;
     previewArea.style.display = "block";
 }
@@ -438,35 +465,29 @@ function generatePDF() {
         return;
     }
 
-    // 入力値を取得 (null チェックを追加)
     const bandName = bandNameInput?.value.trim() || "バンド名未入力";
     const eventName = eventNameInput?.value.trim() || "イベント名未入力";
     const inputDate = dateInput?.value.trim() || "日付未入力";
     const venueName = venueNameInput?.value.trim() || "会場名未入力";
 
-    // PDF用バンド名フォントサイズ
     let bandNameFontSize;
     if (bandName.length >= 16) bandNameFontSize = "35px";
     else if (bandName.length >= 11) bandNameFontSize = "40px";
     else bandNameFontSize = "48px";
 
-    // PDF用リスト項目のフォントサイズ
     const totalItems = currentSetlistItems.length;
     const fontSize = getFontSizeForPDF(totalItems);
 
-    // PDF用リスト項目HTML
     let songNumber = 1;
     const pdfListItemsHtml = currentSetlistItems.map(item => {
         const style = `font-size: ${fontSize}; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 8px; line-height: 1.2;`;
          if (item.type === "song") {
              return `<li style="${style}">${songNumber++}. ${item.title}</li>`;
          } else {
-             // MCは折り返し許可
              return `<li style="${style} white-space: normal;">${item.title}</li>`;
          }
     }).join("");
 
-    // PDF全体のHTMLコンテンツ
     const pdfContentHtml = `
         <div style="width: 100%; padding: 20mm; box-sizing: border-box; text-align: center; background-color: ${invertColors ? 'black' : 'white'}; color: ${invertColors ? 'yellow' : 'black'};">
             <h1 style="font-size: ${bandNameFontSize}; margin-bottom: 10px; font-weight: bold;">${bandName}</h1>
@@ -478,16 +499,14 @@ function generatePDF() {
             </ul>
         </div>`;
 
-    // html2pdfのオプション
     const opt = {
-        margin:       [10, 10, 10, 10], // 上右下左のマージン (mm)
+        margin:       [10, 10, 10, 10],
         filename:     `${bandName}_セットリスト.pdf`,
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { scale: 2, useCORS: true },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
-    // PDF生成を実行
     html2pdf().from(pdfContentHtml).set(opt).save();
 }
 
@@ -496,10 +515,9 @@ function generatePDF() {
  */
 function toggleInvert() {
     console.log('白黒反転ボタンクリック');
-    invertColors = !invertColors; // フラグを反転
-    renderSetlist();              // リスト表示を更新 (スタイル適用のため)
+    invertColors = !invertColors;
+    renderSetlist();
 
-    // プレビューが表示されていれば、そちらも更新
     if (previewArea && previewArea.style.display !== 'none') {
         showPreview();
     }
@@ -510,15 +528,23 @@ function toggleInvert() {
 // ==================================================================
 
 /**
- * 現在のセットリスト配列を Session Storage に保存する
+ * 現在のセットリスト配列とメタデータを Session Storage に保存する
  */
 function saveSetlistToSession() {
+    const dataToSave = {
+        items: currentSetlistItems,
+        metadata: {
+            bandName: bandNameInput ? bandNameInput.value : '',
+            eventName: eventNameInput ? eventNameInput.value : '',
+            date: dateInput ? dateInput.value : '',
+            venueName: venueNameInput ? venueNameInput.value : ''
+        }
+    };
+
     try {
-        // 配列をJSON文字列に変換して保存
-        sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(currentSetlistItems));
-        // console.log('セットリストを SessionStorage に保存しました。'); // デバッグ用
+        sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(dataToSave));
+        // console.log('セットリストとメタデータを SessionStorage に保存しました:', dataToSave); // デバッグ用
     } catch (e) {
-        // 保存失敗時のエラーハンドリング (容量超過など)
         console.error('SessionStorage への保存に失敗しました:', e);
         alert('セットリストの一時保存に失敗しました。ブラウザのストレージ容量を確認してください。');
     }
