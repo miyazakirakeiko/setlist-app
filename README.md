@@ -6,8 +6,8 @@
 <br >
 <br >
 
+![スクリーンショット 2025-05-09 10 46 39](https://github.com/user-attachments/assets/cf304547-c358-4fcd-b15d-489ecaf905ca)
 
-<img width="700" alt="setlist-top" src="https://github.com/user-attachments/assets/400eb5ac-ed2c-4df8-9989-446ad0eed349">
 
 
 ▪️アーティスト目線<br >
@@ -81,6 +81,10 @@ ___
 **プレビュー**<br >
   <img width="424" alt="スクリーンショット 2024-10-04 11 08 07" src="https://github.com/user-attachments/assets/1a507cf2-9272-4d63-bddb-1b6af13264ae">
 <br >
+___
+**楽曲名登録**<br >
+![スクリーンショット 2025-05-09 11 07 25](https://github.com/user-attachments/assets/3cd97dd1-630b-461c-8ee7-9b60fb1e1f87)
+
 ___
 **白黒反転**<br >
   <img width="330" alt="スクリーンショット 2024-10-04 11 10 19" src="https://github.com/user-attachments/assets/31e0c16d-3c3b-4f68-808b-c7c71925f566">
