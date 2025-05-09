@@ -6,7 +6,8 @@
 <br >
 <br >
 
-![スクリーンショット 2025-05-09 10 46 39](https://github.com/user-attachments/assets/cf304547-c358-4fcd-b15d-489ecaf905ca)
+![スクリーンショット 2025-05-09 11 05 59](https://github.com/user-attachments/assets/0a58420c-aac0-443f-b57d-e54cb16407d0)
+
 
 
 
@@ -39,7 +40,7 @@
 
 
 # URL
-https://miyazakirakeiko.github.io/portfolio-setlist/
+setlist-app-main-brq95y.laravel.cloud
 
 # 使用技術
 フロントエンド (Frontend)
