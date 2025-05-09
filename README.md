@@ -5,8 +5,8 @@
 <br >
 <br >
 <br >
-
-![スクリーンショット 2025-05-09 11 05 59](https://github.com/user-attachments/assets/0a58420c-aac0-443f-b57d-e54cb16407d0)
+![スクリーンショット 2025-05-09 11 05 36](https://github.com/user-attachments/assets/f49a6cb5-1a3b-44ff-b6d8-7fe9579d6266)
+<img src="https://github.com/user-attachments/assets/0a58420c-aac0-443f-b57d-e54cb16407d0" alt="スクリーンショット 2025-05-09 11 05 59" width="828">
 
 
 
@@ -72,7 +72,8 @@
 
 
 # 機能一覧
-<br >
+
+___
 
 **曲順入替**<br >
 <img width="385" alt="スクリーンショット 2024-10-04 11 09 22" src="https://github.com/user-attachments/assets/d7363e1c-36fc-4d60-b22e-b46dda7ec54f">
