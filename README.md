@@ -10,7 +10,6 @@
 
 
 
-
 ▪️アーティスト目線<br >
 ・当日のセットリストを作成していない場合、本アプリでpdf出力すればコンビニへ駆け込んで手軽に印刷可能です<br >
 ・ライブ後、本日のセットリストをSNS等で公開すればアーカイブコンテンツとしても利用可能です<br >
@@ -40,7 +39,7 @@
 
 
 # URL
-setlist-app-main-brq95y.laravel.cloud
+[setlist-app-main-brq95y.laravel.cloud](https://setlist-app-main-brq95y.laravel.cloud)
 
 # 使用技術
 フロントエンド (Frontend)
