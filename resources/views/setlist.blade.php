@@ -61,14 +61,22 @@
                     </div>
 
                     <!-- 操作ボタン群 (Breezeスタイル適用) -->
-                    <div class="flex justify-center space-x-4 mt-8">
+                    {{-- ↓↓↓ この <div class="flex justify-center space-x-4 mt-8"> の中を変更 ↓↓↓ --}}
+                    <div class="mt-8 flex flex-wrap justify-center gap-2"> {{-- gap-2 を追加してボタン間のスペースを確保、flex-wrapで折り返し対応 --}}
                          {{-- プレビューを表示ボタン --}}
                          <button id="show-preview-button" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">プレビューを表示</button>
                          {{-- PDF出力ボタン --}}
                          <button id="generate-pdf-button" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">PDF出力</button>
                          {{-- 白黒反転ボタン --}}
                          <button id="toggle-invert-button" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">白黒反転</button>
+                         {{-- ↓↓↓ ここから新しいボタンを追加 ↓↓↓ --}}
+                         <button id="clear-draft-button" class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 focus:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                             入力値をクリア
+                         </button>
+                         {{-- ↑↑↑ ここまで新しいボタン ↑↑↑ --}}
                      </div>
+                     {{-- ↑↑↑ この <div> の変更はここまで ↑↑↑ --}}
+
 
                     <!-- プレビューエリア (変更なし) -->
                     <div id="preview-area" style="display: none; margin-top: 20px;">

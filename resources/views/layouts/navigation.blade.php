@@ -37,7 +37,8 @@
                         </x-dropdown-link> --}}
 
                         <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
+                        {{-- ↓↓↓ IDを追加 ↓↓↓ --}}
+                        <form method="POST" action="{{ route('logout') }}" id="logout-form">
                             @csrf
                             {{-- onclick属性は元のままでOK --}}
                             <x-dropdown-link :href="route('logout')"
@@ -88,7 +89,8 @@
                 </x-responsive-nav-link> --}}
 
                 <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
+                {{-- ↓↓↓ IDを追加 ↓↓↓ --}}
+                <form method="POST" action="{{ route('logout') }}" id="logout-form-responsive">
                     @csrf
                      {{-- onclick属性は元のままでOK --}}
                     <x-responsive-nav-link :href="route('logout')"
