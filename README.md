@@ -5,7 +5,6 @@
 <br >
 <br >
 <br >
-![スクリーンショット 2025-05-09 11 05 36](https://github.com/user-attachments/assets/f49a6cb5-1a3b-44ff-b6d8-7fe9579d6266)
 <img src="https://github.com/user-attachments/assets/0a58420c-aac0-443f-b57d-e54cb16407d0" alt="スクリーンショット 2025-05-09 11 05 59" width="828">
 
 
@@ -20,6 +19,36 @@
 ・好きなアーティストのセットリストを自身で予想して楽しめます<br >
 ・自分が行ったコンサートの曲目を入力し、pdf出力すれば、本人の思い出になります<br >
 ・自分が思う理想のセットリストを仮想で考えることも出来ます<br >
+
+
+# URL
+[setlist-app-main-brq95y.laravel.cloud](https://setlist-app-main-brq95y.laravel.cloud)
+
+
+
+# 機能一覧
+
+___
+
+**曲順入替**<br >
+<img width="385" alt="スクリーンショット 2024-10-04 11 09 22" src="https://github.com/user-attachments/assets/d7363e1c-36fc-4d60-b22e-b46dda7ec54f">
+<br >
+___
+
+**プレビュー**<br >
+  <img width="424" alt="スクリーンショット 2024-10-04 11 08 07" src="https://github.com/user-attachments/assets/1a507cf2-9272-4d63-bddb-1b6af13264ae">
+<br >
+___
+**楽曲名登録**<br >
+![スクリーンショット 2025-05-09 11 07 25](https://github.com/user-attachments/assets/3cd97dd1-630b-461c-8ee7-9b60fb1e1f87)
+
+___
+**白黒反転**<br >
+  <img width="330" alt="スクリーンショット 2024-10-04 11 10 19" src="https://github.com/user-attachments/assets/31e0c16d-3c3b-4f68-808b-c7c71925f566">
+ <img width="220" alt="スクリーンショット 2024-10-08 18 35 35" src="https://github.com/user-attachments/assets/d85d57b4-479d-46f5-aac7-4fbf091321f8">
+ <img width="235" alt="スクリーンショット 2024-10-08 18 36 06" src="https://github.com/user-attachments/assets/228d61ec-994a-4fd2-8ee1-f8b5f374f67b">
+<br >
+
 
 # 実績
 
@@ -37,9 +66,6 @@
 <img width="593" alt="スクリーンショット 2024-10-17 22 56 07" src="https://github.com/user-attachments/assets/c5a2d708-8257-4e00-8028-2dd9a70fa466">
 
 
-
-# URL
-[setlist-app-main-brq95y.laravel.cloud](https://setlist-app-main-brq95y.laravel.cloud)
 
 # 使用技術
 フロントエンド (Frontend)
@@ -71,24 +97,3 @@
 <img width="686" alt="スクリーンショット 2025-05-06 17 46 48" src="https://github.com/user-attachments/assets/785d300c-c6e8-4adf-84fa-7ab3bd7a7592" />
 
 
-# 機能一覧
-
-___
-
-**曲順入替**<br >
-<img width="385" alt="スクリーンショット 2024-10-04 11 09 22" src="https://github.com/user-attachments/assets/d7363e1c-36fc-4d60-b22e-b46dda7ec54f">
-<br >
-___
-**プレビュー**<br >
-  <img width="424" alt="スクリーンショット 2024-10-04 11 08 07" src="https://github.com/user-attachments/assets/1a507cf2-9272-4d63-bddb-1b6af13264ae">
-<br >
-___
-**楽曲名登録**<br >
-![スクリーンショット 2025-05-09 11 07 25](https://github.com/user-attachments/assets/3cd97dd1-630b-461c-8ee7-9b60fb1e1f87)
-
-___
-**白黒反転**<br >
-  <img width="330" alt="スクリーンショット 2024-10-04 11 10 19" src="https://github.com/user-attachments/assets/31e0c16d-3c3b-4f68-808b-c7c71925f566">
- <img width="220" alt="スクリーンショット 2024-10-08 18 35 35" src="https://github.com/user-attachments/assets/d85d57b4-479d-46f5-aac7-4fbf091321f8">
- <img width="235" alt="スクリーンショット 2024-10-08 18 36 06" src="https://github.com/user-attachments/assets/228d61ec-994a-4fd2-8ee1-f8b5f374f67b">
-<br >
